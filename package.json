@@ -1,12 +1,13 @@
 {
-  "name": "@bigcommerce/catalyst",
-  "description": "Catalyst is BigCommerce's composable front-end framework designed for building custom ecommerce storefronts.",
+  "name": "dubai-luxury-brands",
+  "description": "Elevate your scent on the go. Dubai Luxury Brands offers an exclusive collection of premium roll-on perfumes, expertly crafted to capture the essence of iconic luxury fragrances. Perfect for travel, touch-ups, and daily elegance—experience high-end perfumery in the palm of your hand.",
   "keywords": [
-    "bigcommerce",
+    "perfumes",
+    "fragrances",
+    "roll-on",
+    "luxury-scents",
+    "inspired-fragrances",
     "ecommerce",
-    "storefront",
-    "headless",
-    "composable",
     "nextjs"
   ],
   "license": "MIT",
