@@ -45,6 +45,7 @@ export default async function Home({ params }: Props) {
     const data = await streamablePageData;
 
     const featuredProducts = removeEdgesAndNodes(data.site.featuredProducts);
+    console.log('✨ Transformed Featured Products:', featuredProducts.length);
 
     const { defaultOutOfStockMessage, showOutOfStockMessage, showBackorderMessage } =
       data.site.settings?.inventory ?? {};
@@ -63,6 +64,7 @@ export default async function Home({ params }: Props) {
     const data = await streamablePageData;
 
     const newestProducts = removeEdgesAndNodes(data.site.newestProducts);
+    console.log('✨ Transformed Newest Products:', newestProducts.length);
 
     const { defaultOutOfStockMessage, showOutOfStockMessage, showBackorderMessage } =
       data.site.settings?.inventory ?? {};

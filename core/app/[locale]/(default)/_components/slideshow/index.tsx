@@ -2,9 +2,9 @@ import { useTranslations } from 'next-intl';
 
 import { Slideshow as SlideshowSection } from '~/vibes/soul/sections/slideshow';
 
-import SlideBg01 from './slide-bg-01.jpg';
-import SlideBg02 from './slide-bg-02.jpg';
-import SlideBg03 from './slide-bg-03.jpg';
+import SlideBg01 from './slide-01.webp';
+import SlideBg02 from './slide-02.webp';
+import SlideBg03 from './slide-03.webp';
 
 export function Slideshow() {
   const t = useTranslations('Home.Slideshow');
@@ -51,5 +51,5 @@ export function Slideshow() {
     },
   ];
 
-  return <SlideshowSection slides={slides} />;
+  return <SlideshowSection slides={slides} playOnInit={true} />;
 }

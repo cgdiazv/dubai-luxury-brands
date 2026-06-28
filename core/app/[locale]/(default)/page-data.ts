@@ -89,6 +89,21 @@ export const getPageData = cache(
       fetchOptions: customerAccessToken ? { cache: 'no-store' } : { next: { revalidate } },
     });
 
+    console.log('🔍 HomePage Data - Featured Products:', data?.site?.featuredProducts?.edges?.length);
+    console.log('🔍 HomePage Data - Newest Products:', data?.site?.newestProducts?.edges?.length);
+    
+    // Check if products are present
+    if (data?.site?.featuredProducts?.edges?.length === 0) {
+      console.log('⚠️ Featured Products: API returned EMPTY. This could mean:');
+      console.log('   1. No products marked as featured in BigCommerce');
+      console.log('   2. Featured products have no prices');
+      console.log('   3. Featured products are not published');
+    }
+    
+    if (data?.site?.featuredProducts?.edges?.length > 0) {
+      console.log('✅ Featured Products found. First product:', JSON.stringify(data.site.featuredProducts.edges[0], null, 2));
+    }
+
     return data;
   },
 );

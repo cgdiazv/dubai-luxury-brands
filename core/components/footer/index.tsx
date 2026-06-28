@@ -77,7 +77,7 @@ export const Footer = async () => {
 
   const logo = data.settings ? logoTransformer(data.settings) : '';
 
-  const copyright = `© ${new Date().getFullYear()} ${data.settings?.storeName} – Powered by BigCommerce`;
+  const copyright = `© ${new Date().getFullYear()} ${data.settings?.storeName} – Powered by Indeva Websites`;
 
   const contactInformation = data.settings?.contact
     ? {

@@ -109,7 +109,7 @@ export const Footer = ({
               {(contactInformation) => {
                 if (contactInformation?.address != null || contactInformation?.phone != null) {
                   return (
-                    <div className="mb-4 text-lg font-medium @lg:text-xl">
+                    <div className="mb-4 text-base font-medium @lg:text-lg">
                       <h3 className="text-[var(--footer-contact-title,hsl(var(--contrast-500)))]">
                         {contactTitle}
                       </h3>
