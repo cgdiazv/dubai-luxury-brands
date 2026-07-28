@@ -1,51 +1,22 @@
 /* eslint-disable check-file/folder-naming-convention */
-/*
- * Proxy to the store's favicon URL
- *
- * If you would prefer to put a favicon image directly in your codebase,
- * delete this route folder and follow this guide:
- *
- * https://nextjs.org/docs/app/api-reference/file-conventions/metadata/app-icons
- *
- */
-
-import { getChannelIdFromLocale } from '~/channels.config';
-import { client } from '~/client';
-import { graphql } from '~/client/graphql';
-import { defaultLocale } from '~/i18n/locales';
-
-const GetFaviconQuery = graphql(`
-  query GetFaviconQuery {
-    site {
-      settings {
-        faviconUrl
-      }
-    }
-  }
-`);
+import fs from 'fs';
+import path from 'path';
 
 export const GET = async () => {
-  const { data } = await client.fetch({
-    document: GetFaviconQuery,
-    channelId: getChannelIdFromLocale(defaultLocale),
-  });
+  const iconPath = path.join(process.cwd(), 'app/icon.png');
 
-  const faviconUrl = data.site.settings?.faviconUrl;
+  if (fs.existsSync(iconPath)) {
+    const iconBuffer = fs.readFileSync(iconPath);
 
-  if (!faviconUrl) {
-    return new Response(null, {
-      status: 404,
+    return new Response(iconBuffer, {
+      headers: {
+        'Content-Type': 'image/png',
+        'Cache-Control': 'public, max-age=31536000, immutable',
+      },
     });
   }
 
-  // fetch the favicon URL and return the data directly (will be statically cached at build time)
-  const faviconData = await fetch(faviconUrl).then((res) => res.arrayBuffer());
-
-  return new Response(faviconData, {
-    headers: {
-      'Content-Type': 'image/x-icon',
-    },
-  });
+  return new Response(null, { status: 404 });
 };
 
 export const dynamic = 'force-static';

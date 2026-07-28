@@ -32,7 +32,7 @@ interface ContactInformation {
 }
 
 export interface FooterProps {
-  logo: Streamable<string | Image>;
+  logo?: Streamable<string | Image>;
   sections: Streamable<Section[]>;
   copyright?: Streamable<string>;
   contactInformation?: Streamable<ContactInformation>;
@@ -93,27 +93,29 @@ export const Footer = ({
         <div className="flex flex-col justify-between gap-x-16 gap-y-12 @3xl:flex-row">
           <div className="flex flex-col gap-4 @3xl:w-1/3 @3xl:gap-6">
             {/* Logo Information */}
-            <div className="flex items-center justify-start self-stretch">
-              <Logo
-                className="flex"
-                height={logoHeight}
-                href={logoHref}
-                label={logoLabel}
-                logo={logo}
-                width={logoWidth}
-              />
-            </div>
+            {Boolean(logo) && (
+              <div className="flex items-center justify-start self-stretch">
+                <Logo
+                  className="flex"
+                  height={logoHeight}
+                  href={logoHref}
+                  label={logoLabel}
+                  logo={logo}
+                  width={logoWidth}
+                />
+              </div>
+            )}
 
             {/* Contact Information */}
             <Stream fallback={<FooterContactSkeleton />} value={streamableContactInformation}>
               {(contactInformation) => {
                 if (contactInformation?.address != null || contactInformation?.phone != null) {
                   return (
-                    <div className="mb-4 text-base font-medium @lg:text-lg">
-                      <h3 className="text-[var(--footer-contact-title,hsl(var(--contrast-500)))]">
+                    <div className="mb-4 text-base font-medium">
+                      <span className="mb-3 block font-semibold text-[var(--footer-section-title,hsl(var(--foreground)))]">
                         {contactTitle}
-                      </h3>
-                      <div className="text-[var(--footer-contact-text,hsl(var(--foreground)))]">
+                      </span>
+                      <div className="text-sm font-medium text-[var(--footer-contact-text,hsl(var(--foreground)))]">
                         {contactInformation.address != null &&
                           contactInformation.address !== '' && <p>{contactInformation.address}</p>}
                         {contactInformation.phone != null && contactInformation.phone !== '' && (

@@ -18,6 +18,7 @@ import { readFragment } from '~/client/graphql';
 import { revalidate } from '~/client/revalidate-target';
 import { CurrencyCode } from '~/components/header/fragment';
 import { logoTransformer } from '~/data-transformers/logo-transformer';
+import { filterCategories } from '~/lib/category-filter';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 
 import { FooterFragment, FooterSectionsFragment } from './fragment';
@@ -97,20 +98,14 @@ export const Footer = async () => {
     const customerAccessToken = await getSessionCustomerAccessToken();
     const currencyCode = await getPreferredCurrencyCode();
     const sectionsData = await getFooterSections(customerAccessToken, currencyCode);
+    const filteredCategories = filterCategories(sectionsData.categoryTree);
 
     return [
       {
         title: t('categories'),
-        links: sectionsData.categoryTree.map((category) => ({
+        links: filteredCategories.map((category) => ({
           label: category.name,
           href: category.path,
-        })),
-      },
-      {
-        title: t('brands'),
-        links: removeEdgesAndNodes(sectionsData.brands).map((brand) => ({
-          label: brand.name,
-          href: brand.path,
         })),
       },
       {
@@ -138,7 +133,7 @@ export const Footer = async () => {
       contactInformation={contactInformation}
       contactTitle={t('contactUs')}
       copyright={copyright}
-      logo={logo}
+      logo=""
       logoHref="/"
       logoLabel={t('home')}
       paymentIcons={paymentIcons}

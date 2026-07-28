@@ -8,6 +8,7 @@ import {
   PublicToPrivateParams,
 } from '~/app/[locale]/(default)/(faceted)/fetch-faceted-search';
 import { ExistingResultType } from '~/client/util';
+import { filterCategories } from '~/lib/category-filter';
 
 export const facetsTransformer = async ({
   refinedFacets,
@@ -32,12 +33,14 @@ export const facetsTransformer = async ({
       const refinedCategorySearchFilter =
         refinedFacet.__typename === 'CategorySearchFilter' ? refinedFacet : null;
 
+      const allowedCategories = filterCategories(facet.categories);
+
       return {
         type: 'toggle-group' as const,
         paramName: 'categoryIn',
         label: facet.displayName,
         defaultCollapsed: facet.isCollapsedByDefault,
-        options: facet.categories.map((category) => {
+        options: allowedCategories.map((category) => {
           const refinedCategory = refinedCategorySearchFilter?.categories.find(
             (c) => c.entityId === category.entityId,
           );
