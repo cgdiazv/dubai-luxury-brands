@@ -8,6 +8,7 @@ import { FeaturedProductList } from '@/vibes/soul/sections/featured-product-list
 import { getSessionCustomerAccessToken } from '~/auth';
 import { Subscribe } from '~/components/subscribe';
 import { productCardTransformer } from '~/data-transformers/product-card-transformer';
+import { isProductInAllowedCategories } from '~/lib/category-filter';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 import { getMetadataAlternates } from '~/lib/seo/canonical';
 
@@ -44,7 +45,8 @@ export default async function Home({ params }: Props) {
   const streamableFeaturedProducts = Streamable.from(async () => {
     const data = await streamablePageData;
 
-    const featuredProducts = removeEdgesAndNodes(data.site.featuredProducts);
+    const rawFeaturedProducts = removeEdgesAndNodes(data.site.featuredProducts);
+    const featuredProducts = rawFeaturedProducts.filter(isProductInAllowedCategories);
     console.log('✨ Transformed Featured Products:', featuredProducts.length);
 
     const { defaultOutOfStockMessage, showOutOfStockMessage, showBackorderMessage } =
@@ -63,7 +65,8 @@ export default async function Home({ params }: Props) {
   const streamableNewestProducts = Streamable.from(async () => {
     const data = await streamablePageData;
 
-    const newestProducts = removeEdgesAndNodes(data.site.newestProducts);
+    const rawNewestProducts = removeEdgesAndNodes(data.site.newestProducts);
+    const newestProducts = rawNewestProducts.filter(isProductInAllowedCategories);
     console.log('✨ Transformed Newest Products:', newestProducts.length);
 
     const { defaultOutOfStockMessage, showOutOfStockMessage, showBackorderMessage } =

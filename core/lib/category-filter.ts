@@ -17,3 +17,19 @@ export function filterCategories<T extends { name: string }>(categories: readonl
       return indexA - indexB;
     });
 }
+
+export function isProductInAllowedCategories(product: {
+  categories?: { edges?: Array<{ node: { name: string } } | null> | null } | null;
+}): boolean {
+  if (!product.categories?.edges || product.categories.edges.length === 0) {
+    return true;
+  }
+
+  const categoryNames = product.categories.edges
+    .map((edge) => edge?.node?.name?.trim().toLowerCase())
+    .filter((name): name is string => Boolean(name));
+
+  return ALLOWED_CATEGORIES.some((allowed) =>
+    categoryNames.includes(allowed.toLowerCase()),
+  );
+}
