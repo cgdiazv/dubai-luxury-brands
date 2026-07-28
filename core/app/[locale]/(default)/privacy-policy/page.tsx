@@ -76,7 +76,26 @@ export default async function PrivacyPolicyPage({ params }: Props) {
         </section>
 
         <section>
-          <h2 className="mb-3 text-2xl font-semibold text-foreground">6. Contact Us</h2>
+          <h2 className="mb-3 text-2xl font-semibold text-foreground">6. Account Deletion & Your Data Rights</h2>
+          <p>
+            You have the right to request access to, correction of, or permanent deletion of your account and personal data.
+          </p>
+          <ul className="list-disc space-y-2 pl-6 mt-2">
+            <li>
+              <strong>Mobile App:</strong> If you are using our Android app, you can delete your account directly inside the app by going to <strong>Account Details / Edit Account</strong> and tapping <strong>Delete Account</strong>.
+            </li>
+            <li>
+              <strong>Web & General Requests:</strong> You can also request complete account and data deletion by sending an email to{' '}
+              <a className="text-primary underline" href="mailto:contact@dubailuxurybrands.com">
+                contact@dubailuxurybrands.com
+              </a>
+              . Upon verification, we will permanently delete your account and personal details in accordance with applicable laws.
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="mb-3 text-2xl font-semibold text-foreground">7. Contact Us</h2>
           <p>
             If you have any questions or concerns regarding this Privacy Policy, please contact our support team at{' '}
             <a className="text-primary underline" href="mailto:contact@dubailuxurybrands.com">
