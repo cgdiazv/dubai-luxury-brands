@@ -34,7 +34,7 @@ interface ContactInformation {
 export interface FooterProps {
   logo?: Streamable<string | Image>;
   sections: Streamable<Section[]>;
-  copyright?: Streamable<string>;
+  copyright?: Streamable<ReactNode>;
   contactInformation?: Streamable<ContactInformation>;
   paymentIcons?: Streamable<ReactNode[]>;
   socialMediaLinks?: Streamable<SocialMediaLink[]>;

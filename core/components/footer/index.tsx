@@ -21,6 +21,8 @@ import { logoTransformer } from '~/data-transformers/logo-transformer';
 import { filterCategories } from '~/lib/category-filter';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 
+import { Link } from '~/components/link';
+
 import { FooterFragment, FooterSectionsFragment } from './fragment';
 import { AmazonIcon } from './payment-icons/amazon';
 import { AmericanExpressIcon } from './payment-icons/american-express';
@@ -78,7 +80,18 @@ export const Footer = async () => {
 
   const logo = data.settings ? logoTransformer(data.settings) : '';
 
-  const copyright = `© ${new Date().getFullYear()} ${data.settings?.storeName} – Powered by Indeva Websites`;
+  const copyright = (
+    <span>
+      {`© ${new Date().getFullYear()} ${data.settings?.storeName} – Powered by Indeva Websites | `}
+      <Link className="hover:underline" href="/privacy-policy">
+        Privacy Policy
+      </Link>
+      {' | '}
+      <Link className="hover:underline" href="/terms-and-conditions">
+        Terms & Conditions
+      </Link>
+    </span>
+  );
 
   const contactInformation = data.settings?.contact
     ? {
