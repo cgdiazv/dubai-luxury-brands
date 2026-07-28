@@ -72,6 +72,10 @@ const useProgressButton = (
     onSelect(emblaApi);
 
     emblaApi.on('reinit', onInit).on('reinit', onSelect).on('select', onSelect);
+
+    return () => {
+      emblaApi.off('reinit', onInit).off('reinit', onSelect).off('select', onSelect);
+    };
   }, [emblaApi, onInit, onSelect]);
 
   return {
@@ -132,23 +136,43 @@ export function Slideshow({ slides, playOnInit = true, interval = 5000, classNam
   }, [emblaApi]);
 
   useEffect(() => {
-    const autoplay = emblaApi?.plugins().autoplay;
+    if (!emblaApi) return;
+
+    const autoplay = emblaApi.plugins().autoplay;
 
     if (!autoplay) return;
 
+    if (playOnInit && !autoplay.isPlaying()) {
+      autoplay.play();
+    }
+
     setIsPlaying(autoplay.isPlaying());
+
+    const onPlay = () => {
+      setIsPlaying(true);
+      setPlayCount((count) => count + 1);
+    };
+
+    const onStop = () => {
+      setIsPlaying(false);
+    };
+
+    const onReinit = () => {
+      setIsPlaying(autoplay.isPlaying());
+    };
+
     emblaApi
-      .on('autoplay:play', () => {
-        setIsPlaying(true);
-        setPlayCount(playCount + 1);
-      })
-      .on('autoplay:stop', () => {
-        setIsPlaying(false);
-      })
-      .on('reinit', () => {
-        setIsPlaying(autoplay.isPlaying());
-      });
-  }, [emblaApi, playCount]);
+      .on('autoplay:play', onPlay)
+      .on('autoplay:stop', onStop)
+      .on('reinit', onReinit);
+
+    return () => {
+      emblaApi
+        .off('autoplay:play', onPlay)
+        .off('autoplay:stop', onStop)
+        .off('reinit', onReinit);
+    };
+  }, [emblaApi, playOnInit]);
 
   return (
     <section
