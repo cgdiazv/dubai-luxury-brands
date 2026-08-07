@@ -11,6 +11,10 @@ import { auth, getSessionCustomerAccessToken } from '~/auth';
 import { rewriteWysiwygContentUrls } from '~/data-transformers/html-content-transformer';
 import { pricesTransformer } from '~/data-transformers/prices-transformer';
 import { productCardTransformer } from '~/data-transformers/product-card-transformer';
+import {
+  getAllowedCategoryEntityIds,
+  isProductInAllowedCategoryIds,
+} from '~/lib/category-filter';
 import { productOptionsTransformer } from '~/data-transformers/product-options-transformer';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 import { getRecaptchaSiteKey } from '~/lib/recaptcha';
@@ -495,7 +499,10 @@ export default async function Product({ params, searchParams }: Props) {
       return [];
     }
 
-    const relatedProducts = removeEdgesAndNodes(product.relatedProducts);
+    const allowedCategoryEntityIds = await getAllowedCategoryEntityIds(customerAccessToken);
+    const relatedProducts = removeEdgesAndNodes(product.relatedProducts).filter((relatedProduct) =>
+      isProductInAllowedCategoryIds(relatedProduct, allowedCategoryEntityIds),
+    );
 
     return productCardTransformer(relatedProducts, format, undefined, undefined, taxDisplay);
   });

@@ -85,6 +85,5 @@ export const productCardTransformer = (
       outOfStockMessage,
       showBackorderMessage,
       taxDisplay,
-    ),
-  );
+    ));
 };

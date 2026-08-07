@@ -12,6 +12,7 @@ import { client } from '~/client';
 import { graphql } from '~/client/graphql';
 import { revalidate } from '~/client/revalidate-target';
 import { searchResultsTransformer } from '~/data-transformers/search-results-transformer';
+import { getAllowedCategoryEntityIds } from '~/lib/category-filter';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 
 import { SearchProductFragment } from './fragment';
@@ -87,11 +88,19 @@ export async function search(
   const customerAccessToken = await getSessionCustomerAccessToken();
 
   const currencyCode = await getPreferredCurrencyCode();
+  const allowedCategoryEntityIds = await getAllowedCategoryEntityIds(customerAccessToken);
 
   try {
     const response = await client.fetch({
       document: GetQuickSearchResultsQuery,
-      variables: { filters: { searchTerm: submission.value.term }, currencyCode },
+      variables: {
+        filters: {
+          searchTerm: submission.value.term,
+          categoryEntityIds: [...allowedCategoryEntityIds],
+          searchSubCategories: true,
+        },
+        currencyCode,
+      },
       customerAccessToken,
       fetchOptions: customerAccessToken ? { cache: 'no-store' } : { next: { revalidate } },
     });

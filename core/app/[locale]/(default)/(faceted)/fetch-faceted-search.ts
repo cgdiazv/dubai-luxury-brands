@@ -7,6 +7,7 @@ import { PaginationFragment } from '~/client/fragments/pagination';
 import { graphql, VariablesOf } from '~/client/graphql';
 import { CurrencyCode } from '~/components/header/fragment';
 import { ProductCardFragment } from '~/components/product-card/fragment';
+import { getAllowedCategoryEntityIds } from '~/lib/category-filter';
 
 const GetProductSearchResultsQuery = graphql(
   `
@@ -178,13 +179,36 @@ interface ProductSearch {
   filters: SearchProductsFiltersInput;
 }
 
+const withAllowedCategoryFilter = (
+  filters: SearchProductsFiltersInput,
+  allowedCategoryEntityIds: readonly number[],
+): SearchProductsFiltersInput => {
+  if (allowedCategoryEntityIds.length === 0) {
+    return filters;
+  }
+
+  if (filters.categoryEntityId != null || filters.categoryEntityIds?.length) {
+    return filters;
+  }
+
+  return {
+    ...filters,
+    categoryEntityIds: [...allowedCategoryEntityIds],
+    searchSubCategories: true,
+  };
+};
+
 const getProductSearchResults = cache(
   async (
     { limit = 9, after, before, sort, filters }: ProductSearch,
     currencyCode?: CurrencyCode,
     customerAccessToken?: string,
   ) => {
-    const filterArgs = { filters, sort };
+    const allowedCategoryEntityIds = await getAllowedCategoryEntityIds(customerAccessToken);
+    const filterArgs = {
+      filters: withAllowedCategoryFilter(filters, allowedCategoryEntityIds),
+      sort,
+    };
     const paginationArgs = before ? { last: limit, before } : { first: limit, after };
 
     const response = await client.fetch({

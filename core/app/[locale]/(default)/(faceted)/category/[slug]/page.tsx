@@ -13,6 +13,7 @@ import { getSessionCustomerAccessToken } from '~/auth';
 import { facetsTransformer } from '~/data-transformers/facets-transformer';
 import { pageInfoTransformer } from '~/data-transformers/page-info-transformer';
 import { productCardTransformer } from '~/data-transformers/product-card-transformer';
+import { isWithinAllowedCategoryTree } from '~/lib/category-filter';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 import { getMetadataAlternates } from '~/lib/seo/canonical';
 
@@ -81,6 +82,12 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     return notFound();
   }
 
+  const breadcrumbNames = removeEdgesAndNodes(category.breadcrumbs).map(({ name }) => name);
+
+  if (!isWithinAllowedCategoryTree([category.name, ...breadcrumbNames])) {
+    return notFound();
+  }
+
   const { pageTitle, metaDescription, metaKeywords } = category.seo;
 
   const breadcrumbs = removeEdgesAndNodes(category.breadcrumbs);
@@ -112,6 +119,12 @@ export default async function Category(props: Props) {
   );
 
   if (!category) {
+    return notFound();
+  }
+
+  const breadcrumbNames = removeEdgesAndNodes(category.breadcrumbs).map(({ name }) => name);
+
+  if (!isWithinAllowedCategoryTree([category.name, ...breadcrumbNames])) {
     return notFound();
   }
 
