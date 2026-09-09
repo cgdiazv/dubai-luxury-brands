@@ -56,6 +56,8 @@ export default async function Compare(props: Props) {
   setRequestLocale(locale);
 
   const t = await getTranslations('Compare');
+  const pt = await getTranslations('Product.ProductDetails');
+  const customerAccessToken = await getSessionCustomerAccessToken();
 
   const streamableProducts = Streamable.from(async () => {
     const customerAccessToken = await getSessionCustomerAccessToken();
@@ -79,7 +81,7 @@ export default async function Compare(props: Props) {
       image: product.defaultImage
         ? { src: product.defaultImage.url, alt: product.defaultImage.altText }
         : undefined,
-      price: pricesTransformer(product, format, taxDisplay),
+      price: pricesTransformer(product, format, taxDisplay, Boolean(customerAccessToken)),
       subtitle: product.brand?.name ?? undefined,
       rating: product.reviewSummary.averageRating,
       description: <div dangerouslySetInnerHTML={{ __html: product.description }} />,
@@ -126,7 +128,7 @@ export default async function Compare(props: Props) {
     <CompareAnalyticsProvider data={streamableAnalyticsData}>
       <CompareSection
         addToCartAction={addToCart}
-        addToCartLabel={t('addToCart')}
+        addToCartLabel={customerAccessToken ? t('addToCart') : pt('Submit.loginForPrices')}
         descriptionLabel={t('description')}
         emptyStateTitle={t('noProductsToCompare')}
         nextLabel={t('next')}

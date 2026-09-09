@@ -29,6 +29,7 @@ import { Select } from '@/vibes/soul/form/select';
 import { SwatchRadioGroup } from '@/vibes/soul/form/swatch-radio-group';
 import { Textarea } from '@/vibes/soul/form/textarea';
 import { Button } from '@/vibes/soul/primitives/button';
+import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { toast } from '@/vibes/soul/primitives/toaster';
 import { useEvents } from '~/components/analytics/events';
 import { usePathname, useRouter } from '~/i18n/routing';
@@ -64,6 +65,7 @@ export interface ProductDetailFormProps<F extends Field> {
   action: ProductDetailFormAction<F>;
   productId: string;
   ctaLabel?: string;
+  ctaHref?: string;
   quantityLabel?: string;
   incrementLabel?: string;
   decrementLabel?: string;
@@ -82,6 +84,7 @@ export function ProductDetailForm<F extends Field>({
   fields,
   productId,
   ctaLabel = 'Add to cart',
+  ctaHref,
   quantityLabel = 'Quantity',
   incrementLabel = 'Increase quantity',
   decrementLabel = 'Decrease quantity',
@@ -300,20 +303,28 @@ export function ProductDetailForm<F extends Field>({
           </div>
 
           <div className="flex gap-x-3">
-            <NumberInput
-              aria-label={quantityLabel}
-              decrementLabel={decrementLabel}
-              incrementLabel={incrementLabel}
-              max={maxQuantity}
-              min={minQuantity ?? 1}
-              name={formFields.quantity.name}
-              onBlur={quantityControl.blur}
-              onChange={(e) => quantityControl.change(e.currentTarget.value)}
-              onFocus={quantityControl.focus}
-              required
-              value={quantityControl.value}
-            />
-            <SubmitButton disabled={ctaDisabled}>{ctaLabel}</SubmitButton>
+            {ctaHref != null ? (
+              <ButtonLink className="w-auto @xl:w-56" href={ctaHref} size="medium">
+                {ctaLabel}
+              </ButtonLink>
+            ) : (
+              <>
+                <NumberInput
+                  aria-label={quantityLabel}
+                  decrementLabel={decrementLabel}
+                  incrementLabel={incrementLabel}
+                  max={maxQuantity}
+                  min={minQuantity ?? 1}
+                  name={formFields.quantity.name}
+                  onBlur={quantityControl.blur}
+                  onChange={(e) => quantityControl.change(e.currentTarget.value)}
+                  onFocus={quantityControl.focus}
+                  required
+                  value={quantityControl.value}
+                />
+                <SubmitButton disabled={ctaDisabled}>{ctaLabel}</SubmitButton>
+              </>
+            )}
             {additionalActions}
           </div>
         </div>

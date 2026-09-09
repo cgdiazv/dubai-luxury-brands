@@ -3,11 +3,13 @@
 import { BigCommerceGQLError } from '@bigcommerce/catalyst-client';
 import { SubmissionResult } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { ReactNode } from 'react';
 
 import { compareAddToCartFormDataSchema } from '@/vibes/soul/primitives/compare-card/schema';
+import { getSessionCustomerAccessToken } from '~/auth';
 import { Link } from '~/components/link';
+import { redirect } from '~/i18n/routing';
 import { addToOrCreateCart } from '~/lib/cart';
 import { MissingCartError } from '~/lib/cart/error';
 
@@ -25,6 +27,15 @@ export const addToCart = async (
   successMessage?: ReactNode;
 }> => {
   const t = await getTranslations('Compare');
+
+  // Guests can't purchase while prices are hidden; send them to login instead.
+  const customerAccessToken = await getSessionCustomerAccessToken();
+
+  if (!customerAccessToken) {
+    const locale = await getLocale();
+
+    redirect({ href: '/login', locale });
+  }
 
   const submission = parseWithZod(payload, { schema: compareAddToCartFormDataSchema });
 

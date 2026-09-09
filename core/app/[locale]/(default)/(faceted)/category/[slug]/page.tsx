@@ -178,6 +178,7 @@ export default async function Category(props: Props) {
       showOutOfStockMessage ? defaultOutOfStockMessage : undefined,
       showBackorderMessage,
       taxDisplay,
+      Boolean(customerAccessToken),
     );
   });
 

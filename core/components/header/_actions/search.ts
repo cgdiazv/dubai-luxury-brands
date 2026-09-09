@@ -110,7 +110,11 @@ export async function search(
 
     return {
       lastResult: submission.reply(),
-      searchResults: await searchResultsTransformer(removeEdgesAndNodes(products), taxDisplay),
+      searchResults: await searchResultsTransformer(
+        removeEdgesAndNodes(products),
+        taxDisplay,
+        Boolean(customerAccessToken),
+      ),
       emptyStateTitle,
       emptyStateSubtitle,
     };

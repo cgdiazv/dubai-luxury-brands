@@ -149,6 +149,7 @@ export default async function Brand(props: Props) {
       showOutOfStockMessage ? defaultOutOfStockMessage : undefined,
       showBackorderMessage,
       taxDisplay,
+      Boolean(customerAccessToken),
     );
   });
 

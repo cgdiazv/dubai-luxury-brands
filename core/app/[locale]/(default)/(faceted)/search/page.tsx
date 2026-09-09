@@ -110,6 +110,7 @@ export default async function Search(props: Props) {
 
   const streamableProducts = Streamable.from(async () => {
     const format = await getFormatter();
+    const customerAccessToken = await getSessionCustomerAccessToken();
 
     const searchParams = await props.searchParams;
     const searchTerm = typeof searchParams.term === 'string' ? searchParams.term : '';
@@ -130,6 +131,7 @@ export default async function Search(props: Props) {
       showOutOfStockMessage ? defaultOutOfStockMessage : undefined,
       showBackorderMessage,
       taxDisplay,
+      Boolean(customerAccessToken),
     );
   });
 

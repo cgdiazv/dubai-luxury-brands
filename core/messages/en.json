@@ -472,6 +472,7 @@
       "imagesLoaded": "{count, plural, =1 {1 more image loaded} other {# more images loaded}}",
       "Submit": {
         "addToCart": "Add to cart",
+        "loginForPrices": "Login for prices",
         "outOfStock": "Out of stock",
         "preorder": "Preorder",
         "unavailable": "Unavailable"

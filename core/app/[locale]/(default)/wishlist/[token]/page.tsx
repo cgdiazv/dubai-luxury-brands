@@ -12,6 +12,7 @@ import { SectionLayout } from '@/vibes/soul/sections/section-layout';
 import { Wishlist, WishlistDetails } from '@/vibes/soul/sections/wishlist-details';
 import { addWishlistItemToCart } from '~/app/[locale]/(default)/account/wishlists/[id]/_actions/add-to-cart';
 import { WishlistAnalyticsProvider } from '~/app/[locale]/(default)/account/wishlists/[id]/_components/wishlist-analytics-provider';
+import { getSessionCustomerAccessToken } from '~/auth';
 import { ExistingResultType } from '~/client/util';
 import {
   WishlistShareButton,
@@ -46,13 +47,21 @@ async function getWishlist(
 ): Promise<Wishlist> {
   const searchParamsParsed = searchParamsCache.parse(await searchParams);
   const formatter = await getFormatter();
+  const customerAccessToken = await getSessionCustomerAccessToken();
   const result = await getPublicWishlist(token, searchParamsParsed);
 
   if (!result) {
     return notFound();
   }
 
-  return publicWishlistDetailsTransformer(result.wishlist, t, pt, formatter, result.taxDisplay);
+  return publicWishlistDetailsTransformer(
+    result.wishlist,
+    t,
+    pt,
+    formatter,
+    result.taxDisplay,
+    Boolean(customerAccessToken),
+  );
 }
 
 async function getPaginationInfo(

@@ -68,6 +68,7 @@ export default async function Home({ params }: Props) {
       showOutOfStockMessage ? defaultOutOfStockMessage : undefined,
       showBackorderMessage,
       taxDisplay,
+      Boolean(customerAccessToken),
     );
   });
 
@@ -94,6 +95,7 @@ export default async function Home({ params }: Props) {
       showOutOfStockMessage ? defaultOutOfStockMessage : undefined,
       showBackorderMessage,
       taxDisplay,
+      Boolean(customerAccessToken),
     );
   });
 

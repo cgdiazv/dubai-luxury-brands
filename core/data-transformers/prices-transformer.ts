@@ -23,7 +23,13 @@ export const pricesTransformer = (
   pricing: Pricing,
   format: Format,
   taxDisplay: TaxDisplay | null | undefined = 'EX',
+  isLoggedIn = true,
 ): Price | undefined => {
+  // Prices are hidden storewide from guests; only logged-in customers see them.
+  if (!isLoggedIn) {
+    return undefined;
+  }
+
   const inc = pricing.pricesIncludingTax;
   const ex = pricing.pricesExcludingTax;
 

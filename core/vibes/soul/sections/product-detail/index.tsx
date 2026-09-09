@@ -61,6 +61,7 @@ export interface ProductDetailProps<F extends Field> {
   emptySelectPlaceholder?: string;
   ctaLabel?: Streamable<string | null>;
   ctaDisabled?: Streamable<boolean | null>;
+  ctaHref?: Streamable<string | null>;
   prefetch?: boolean;
   thumbnailLabel?: string;
   additionalInformationTitle?: string;
@@ -104,6 +105,7 @@ export function ProductDetail<F extends Field>({
   emptySelectPlaceholder,
   ctaLabel: streamableCtaLabel,
   ctaDisabled: streamableCtaDisabled,
+  ctaHref: streamableCtaHref,
   prefetch,
   thumbnailLabel,
   additionalInformationTitle = 'Additional information',
@@ -232,6 +234,7 @@ export function ProductDetail<F extends Field>({
                         streamableFields,
                         streamableCtaLabel,
                         streamableCtaDisabled,
+                        streamableCtaHref,
                         product.minQuantity,
                         product.maxQuantity,
                         product.stockDisplayData,
@@ -242,6 +245,7 @@ export function ProductDetail<F extends Field>({
                         fields,
                         ctaLabel,
                         ctaDisabled,
+                        ctaHref,
                         minQuantity,
                         maxQuantity,
                         stockDisplayData,
@@ -252,6 +256,7 @@ export function ProductDetail<F extends Field>({
                           additionalActions={additionalActions}
                           backorderDisplayData={backorderDisplayData ?? undefined}
                           ctaDisabled={ctaDisabled ?? undefined}
+                          ctaHref={ctaHref ?? undefined}
                           ctaLabel={ctaLabel ?? undefined}
                           decrementLabel={decrementLabel}
                           emptySelectPlaceholder={emptySelectPlaceholder}

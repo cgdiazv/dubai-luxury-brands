@@ -181,7 +181,7 @@ export default async function Product({ params, searchParams }: Props) {
       return null;
     }
 
-    return pricesTransformer(product, format, taxDisplay) ?? null;
+    return pricesTransformer(product, format, taxDisplay, Boolean(customerAccessToken)) ?? null;
   });
 
   const streamableImages = Streamable.from(async () => {
@@ -203,11 +203,11 @@ export default async function Product({ params, searchParams }: Props) {
   });
 
   const streameableCtaLabel = Streamable.from(async () => {
-    const product = await streamableProductInventory;
-
-    if (product.availabilityV2.status === 'Unavailable') {
-      return t('ProductDetails.Submit.unavailable');
+    if (!customerAccessToken) {
+      return t('ProductDetails.Submit.loginForPrices');
     }
+
+    const product = await streamableProductInventory;
 
     if (product.availabilityV2.status === 'Preorder') {
       return t('ProductDetails.Submit.preorder');
@@ -504,7 +504,14 @@ export default async function Product({ params, searchParams }: Props) {
       isProductInAllowedCategoryIds(relatedProduct, allowedCategoryEntityIds),
     );
 
-    return productCardTransformer(relatedProducts, format, undefined, undefined, taxDisplay);
+    return productCardTransformer(
+      relatedProducts,
+      format,
+      undefined,
+      undefined,
+      taxDisplay,
+      Boolean(customerAccessToken),
+    );
   });
 
   const streamableMinQuantity = Streamable.from(async () => {
@@ -564,6 +571,11 @@ export default async function Product({ params, searchParams }: Props) {
           }
           additionalInformationTitle={t('ProductDetails.additionalInformation')}
           ctaDisabled={streameableCtaDisabled}
+          ctaHref={
+            customerAccessToken
+              ? null
+              : `/login?${new URLSearchParams({ redirectTo: baseProduct.path }).toString()}`
+          }
           ctaLabel={streameableCtaLabel}
           decrementLabel={t('ProductDetails.decreaseQuantity')}
           emptySelectPlaceholder={t('ProductDetails.emptySelectPlaceholder')}

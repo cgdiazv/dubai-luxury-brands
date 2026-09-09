@@ -9,6 +9,7 @@ import { pricesTransformer, TaxDisplay } from './prices-transformer';
 export async function searchResultsTransformer(
   searchProducts: Array<ResultOf<typeof SearchProductFragment>>,
   taxDisplay?: TaxDisplay | null,
+  isLoggedIn = true,
 ): Promise<SearchResult[]> {
   const format = await getFormatter();
   const t = await getTranslations('Components.Header.Search');
@@ -17,7 +18,7 @@ export async function searchResultsTransformer(
     type: 'products',
     title: t('products'),
     products: searchProducts.map((product) => {
-      const price = pricesTransformer(product, format, taxDisplay);
+      const price = pricesTransformer(product, format, taxDisplay, isLoggedIn);
 
       return {
         id: product.entityId.toString(),

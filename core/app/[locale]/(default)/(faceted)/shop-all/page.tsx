@@ -101,6 +101,7 @@ export default async function ShopAll(props: Props) {
       showOutOfStockMessage ? defaultOutOfStockMessage : undefined,
       showBackorderMessage,
       taxDisplay,
+      Boolean(customerAccessToken),
     );
   });
 

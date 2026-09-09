@@ -56,6 +56,7 @@ function wishlistItemsTransformer(
   formatter: ExistingResultType<typeof getFormatter>,
   pt?: ExistingResultType<typeof getTranslations<'Product.ProductDetails'>>,
   taxDisplay?: TaxDisplay | null,
+  isLoggedIn = true,
 ): WishlistItem[] {
   return removeEdgesAndNodes(wishlistItems)
     .filter(
@@ -67,10 +68,12 @@ function wishlistItemsTransformer(
       productId: item.productEntityId.toString(),
       variantId: item.variantEntityId?.toString() ?? undefined,
       callToAction: pt
-        ? {
-            label: getCtaLabel(item.product, pt),
-            disabled: getCtaDisabled(item.product),
-          }
+        ? isLoggedIn
+          ? {
+              label: getCtaLabel(item.product, pt),
+              disabled: getCtaDisabled(item.product),
+            }
+          : { label: pt('Submit.loginForPrices'), disabled: false }
         : undefined,
       product: singleProductCardTransformer(
         item.product,
@@ -78,6 +81,7 @@ function wishlistItemsTransformer(
         undefined,
         undefined,
         taxDisplay,
+        isLoggedIn,
       ),
     }));
 }
@@ -88,6 +92,7 @@ function wishlistTransformer(
   formatter: ExistingResultType<typeof getFormatter>,
   pt?: ExistingResultType<typeof getTranslations<'Product.ProductDetails'>>,
   taxDisplay?: TaxDisplay | null,
+  isLoggedIn = true,
 ): Wishlist {
   const totalItems = wishlist.items.collectionInfo?.totalItems ?? 0;
 
@@ -102,7 +107,7 @@ function wishlistTransformer(
       privateLabel: t('Visibility.private'),
     },
     href: `/account/wishlists/${wishlist.entityId}`,
-    items: wishlistItemsTransformer(wishlist.items, formatter, pt, taxDisplay),
+    items: wishlistItemsTransformer(wishlist.items, formatter, pt, taxDisplay, isLoggedIn),
     totalItems: {
       value: totalItems,
       label: t('items', { count: totalItems }),
@@ -134,4 +139,6 @@ export const publicWishlistDetailsTransformer = (
   pt: ExistingResultType<typeof getTranslations<'Product.ProductDetails'>>,
   formatter: ExistingResultType<typeof getFormatter>,
   taxDisplay?: TaxDisplay | null,
-): Wishlist => wishlistTransformer({ ...wishlist, isPublic: true }, t, formatter, pt, taxDisplay);
+  isLoggedIn = true,
+): Wishlist =>
+  wishlistTransformer({ ...wishlist, isPublic: true }, t, formatter, pt, taxDisplay, isLoggedIn);

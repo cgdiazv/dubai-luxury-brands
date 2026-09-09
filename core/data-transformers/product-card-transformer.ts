@@ -52,6 +52,7 @@ export const singleProductCardTransformer = (
   outOfStockMessage?: string,
   showBackorderMessage?: boolean,
   taxDisplay?: TaxDisplay | null,
+  isLoggedIn = true,
 ): Product => {
   return {
     id: product.entityId.toString(),
@@ -60,7 +61,7 @@ export const singleProductCardTransformer = (
     image: product.defaultImage
       ? { src: product.defaultImage.url, alt: product.defaultImage.altText }
       : undefined,
-    price: pricesTransformer(product, format, taxDisplay),
+    price: pricesTransformer(product, format, taxDisplay, isLoggedIn),
     subtitle: product.brand?.name ?? undefined,
     rating: product.reviewSummary.averageRating,
     numberOfReviews: product.reviewSummary.numberOfReviews,
@@ -77,6 +78,7 @@ export const productCardTransformer = (
   outOfStockMessage?: string,
   showBackorderMessage?: boolean,
   taxDisplay?: TaxDisplay | null,
+  isLoggedIn = true,
 ): Product[] => {
   return products.map((product) =>
     singleProductCardTransformer(
@@ -85,5 +87,6 @@ export const productCardTransformer = (
       outOfStockMessage,
       showBackorderMessage,
       taxDisplay,
+      isLoggedIn,
     ));
 };

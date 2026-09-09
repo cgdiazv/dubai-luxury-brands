@@ -3,10 +3,12 @@
 import { BigCommerceAPIError, BigCommerceGQLError } from '@bigcommerce/catalyst-client';
 import { SubmissionResult } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { z } from 'zod';
 
+import { getSessionCustomerAccessToken } from '~/auth';
 import { Link } from '~/components/link';
+import { redirect } from '~/i18n/routing';
 import { addToOrCreateCart } from '~/lib/cart';
 import { MissingCartError } from '~/lib/cart/error';
 
@@ -23,6 +25,16 @@ const schema = z.object({
 
 export async function addWishlistItemToCart(prevState: State, formData: FormData): Promise<State> {
   const t = await getTranslations('Product.ProductDetails');
+
+  // Guests can't purchase while prices are hidden; send them to login instead.
+  const customerAccessToken = await getSessionCustomerAccessToken();
+
+  if (!customerAccessToken) {
+    const locale = await getLocale();
+
+    redirect({ href: '/login', locale });
+  }
+
   const submission = parseWithZod(formData, { schema });
 
   if (submission.status !== 'success') {
